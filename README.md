@@ -1,2 +1,2 @@
 # ssosage
-sos service
+sso service
