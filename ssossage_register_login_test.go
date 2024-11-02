@@ -35,6 +35,10 @@ func TestRegisterLogin(t *testing.T) {
 		return []byte(APP_SECRET), nil
 	})
 
+	if err != nil {
+		t.Fatal("failed to parse token")
+	}
+
 	claims, ok := tokenParsed.Claims.(jwt.MapClaims)
 
 	if !ok {
