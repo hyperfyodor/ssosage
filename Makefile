@@ -2,9 +2,5 @@ get-proto:
 	GOPRIVATE=github.com/hyperfyodor/ssosage_proto \
 	 go get github.com/hyperfyodor/ssosage_proto@dev
 
-run:
-	go build
-	./ssosage
-
-test:
-	go test . -count=1 -v
+migrate:
+	go run ./cmd/migrator --config=./config/migrations.json
