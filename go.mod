@@ -16,7 +16,9 @@ require (
 require (
 	github.com/BurntSushi/toml v1.4.0 // indirect
 	github.com/dustin/go-humanize v1.0.1 // indirect
+	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
 	github.com/google/uuid v1.6.0 // indirect
+	github.com/grpc-ecosystem/go-grpc-middleware/v2 v2.1.0 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
 	github.com/hashicorp/golang-lru/v2 v2.0.7 // indirect
