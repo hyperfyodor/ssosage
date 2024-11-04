@@ -9,12 +9,13 @@ import (
 	"os"
 	"os/signal"
 	config "ssosage/internal/config/ssosage"
-	"ssosage/internal/hasher"
 	"ssosage/internal/helpers"
 	"ssosage/internal/server"
 	service "ssosage/internal/services/ssosage"
 	"ssosage/internal/storage/sqlite"
 	"syscall"
+
+	hasher "ssosage/internal/hasher/argon2"
 
 	"github.com/grpc-ecosystem/go-grpc-middleware/v2/interceptors/logging"
 	"github.com/grpc-ecosystem/go-grpc-middleware/v2/interceptors/recovery"
@@ -37,8 +38,8 @@ func main() {
 		panic("failed to create storage")
 	}
 
-	bcryptHasher := hasher.BcryptHasher{}
-	ssosage := service.New(log, storage, storage, &bcryptHasher)
+	argon2Hasher := hasher.Default()
+	ssosage := service.New(log, storage, storage, argon2Hasher)
 
 	loggingOpts := []logging.Option{
 		logging.WithLogOnEvents(
