@@ -1,14 +1,14 @@
 package hasher
 
-import "golang.org/x/crypto/bcrypt"
+import (
+	"golang.org/x/crypto/bcrypt"
+)
 
 type BcryptHasher struct{}
 
 /*
-*
-
-	Hash(password string) ([]byte, error)
-	Compare(hash []byte, password string) (bool, error)
+Hash(password string) ([]byte, error)
+Compare(hash []byte, password string) (bool, error)
 */
 func (b *BcryptHasher) Hash(password string) ([]byte, error) {
 	return bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)

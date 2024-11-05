@@ -13,9 +13,10 @@ const (
 )
 
 type Config struct {
-	StoragePath string `json:"storage_path" env-required:"true"`
-	GrpcPort    int    `json:"grpc_port" env-default:"3333"`
-	Env         string `json:"env" env-default:"local"`
+	StoragePath    string `json:"storage_path" env-required:"true"`
+	GrpcPort       int    `json:"grpc_port" env-default:"3333"`
+	Env            string `json:"env" env-default:"local"`
+	PasswordHasher string `json:"password_hasher" end-default:"bcrypt"`
 }
 
 func MustLoad(configPath string) *Config {
