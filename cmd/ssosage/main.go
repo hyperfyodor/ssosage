@@ -10,12 +10,14 @@ import (
 	"os/signal"
 	config "ssosage/internal/config/ssosage"
 	"ssosage/internal/helpers"
+	"ssosage/internal/interfaces"
 	"ssosage/internal/server"
 	service "ssosage/internal/services/ssosage"
 	"ssosage/internal/storage/sqlite"
 	"syscall"
 
-	hasher "ssosage/internal/hasher/argon2"
+	argon2 "ssosage/internal/hasher/argon2"
+	bcrypt "ssosage/internal/hasher/bcrypt"
 
 	"github.com/grpc-ecosystem/go-grpc-middleware/v2/interceptors/logging"
 	"github.com/grpc-ecosystem/go-grpc-middleware/v2/interceptors/recovery"
@@ -38,8 +40,10 @@ func main() {
 		panic("failed to create storage")
 	}
 
-	argon2Hasher := hasher.Default()
-	ssosage := service.New(log, storage, storage, argon2Hasher)
+	hasher := setupHasher(cfg.PasswordHasher)
+	log.Info("created hasher", "hasher", fmt.Sprintf("%T", hasher))
+
+	ssosage := service.New(log, storage, storage, hasher)
 
 	loggingOpts := []logging.Option{
 		logging.WithLogOnEvents(
@@ -109,6 +113,17 @@ func setupLogger(env string) *slog.Logger {
 	}
 
 	return log
+}
+
+func setupHasher(passwordHasher string) interfaces.PasswordHasher {
+	switch passwordHasher {
+	case "bcrypt":
+		return &bcrypt.BcryptHasher{}
+	case "argon", "argon2":
+		return argon2.Default()
+	}
+
+	return &bcrypt.BcryptHasher{}
 }
 
 func interceptorLogger(l *slog.Logger) logging.Logger {
