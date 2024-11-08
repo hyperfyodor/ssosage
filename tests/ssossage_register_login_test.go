@@ -46,7 +46,7 @@ func TestRegisterLogin(t *testing.T) {
 		t.Fatalf("failed to register a client: %v", err)
 	}
 
-	t.Logf("created a client %v", clientName)
+	t.Logf("created a client: %v", clientName)
 
 	role := "user"
 
@@ -69,6 +69,10 @@ func TestRegisterLogin(t *testing.T) {
 	tokenParsed, err := jwt.Parse(resp.Token, func(token *jwt.Token) (interface{}, error) {
 		return []byte(APP_SECRET), nil
 	})
+
+	if err != nil {
+		t.Fatalf("failed to parse token %v", err)
+	}
 
 	claims, ok := tokenParsed.Claims.(jwt.MapClaims)
 
