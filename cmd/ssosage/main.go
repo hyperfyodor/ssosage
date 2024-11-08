@@ -43,7 +43,7 @@ func main() {
 	hasher := setupHasher(cfg.PasswordHasher)
 	log.Info("created hasher", "hasher", fmt.Sprintf("%T", hasher))
 
-	ssosage := service.New(log, storage, storage, hasher)
+	ssosage := service.New(log, storage, storage, storage, storage, hasher)
 
 	loggingOpts := []logging.Option{
 		logging.WithLogOnEvents(

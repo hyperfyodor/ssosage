@@ -1,1 +1,2 @@
-DROP TABLE IF EXISTS users;
+drop table if exists clients;
+drop table if exists apps;

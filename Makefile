@@ -1,6 +1,6 @@
 get-proto:
 	GOPRIVATE=github.com/hyperfyodor/ssosage_proto \
-	 go get github.com/hyperfyodor/ssosage_proto@dev
+	 go get github.com/hyperfyodor/ssosage_proto@apps_roles_model
 
 migrate:
 	go run ./cmd/migrator --config=./config/migrations.json

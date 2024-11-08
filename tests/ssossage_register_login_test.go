@@ -5,42 +5,70 @@ import (
 	"testing"
 
 	"github.com/brianvoe/gofakeit/v6"
-	"github.com/golang-jwt/jwt/v5"
+	"github.com/golang-jwt/jwt"
 	"github.com/hyperfyodor/ssosage_proto"
 )
 
 const APP_SECRET = "some_secret"
 
 func TestRegisterLogin(t *testing.T) {
-
 	ctx, suite := suite.NewSuite(t)
 
-	name := gofakeit.Name()
+	appName := gofakeit.AppName()
+
+	_, err := suite.SsosageClient.RegisterApp(
+		ctx,
+		&ssosage_proto.RegisterAppRequest{
+			AppName:   appName,
+			AppSecret: APP_SECRET,
+			Roles:     []string{"user", "admin"},
+		},
+	)
+
+	if err != nil {
+		t.Fatalf("failed to register an app: %v", err)
+	}
+
+	t.Logf("created an app : %v", appName)
+
+	clientName := gofakeit.AppName()
 	password := gofakeit.Password(true, true, true, true, false, 20)
 
-	_, err := suite.SsosageClient.Register(ctx, &ssosage_proto.RegisterRequest{Name: name, Password: password})
+	_, err = suite.SsosageClient.RegisterClient(
+		ctx,
+		&ssosage_proto.RegisterClientRequest{
+			ClientName: clientName,
+			Password:   password,
+		},
+	)
 
 	if err != nil {
-		t.Fatalf("failed to register: %v", err)
+		t.Fatalf("failed to register a client: %v", err)
 	}
 
-	resp2, err := suite.SsosageClient.Login(ctx, &ssosage_proto.LoginRequest{Name: name, Password: password})
+	t.Logf("created a client %v", clientName)
+
+	role := "user"
+
+	resp, err := suite.SsosageClient.GenerateToken(
+		ctx,
+		&ssosage_proto.GenerateTokenRequest{
+			ClientName: clientName,
+			Password:   password,
+			AppName:    appName,
+			Role:       role,
+		},
+	)
 
 	if err != nil {
-		t.Fatalf("failed to login: %v", err)
+		t.Fatalf("failed to generate token: %v", err)
 	}
 
-	if len(resp2.Token) == 0 {
-		t.Fatalf("token %v is invlid", resp2.Token)
-	}
+	t.Logf("generated a token for client %v, app %v, role %v", clientName, appName, role)
 
-	tokenParsed, err := jwt.Parse(resp2.Token, func(token *jwt.Token) (interface{}, error) {
+	tokenParsed, err := jwt.Parse(resp.Token, func(token *jwt.Token) (interface{}, error) {
 		return []byte(APP_SECRET), nil
 	})
-
-	if err != nil {
-		t.Fatal("failed to parse token")
-	}
 
 	claims, ok := tokenParsed.Claims.(jwt.MapClaims)
 
@@ -48,8 +76,8 @@ func TestRegisterLogin(t *testing.T) {
 		t.Fatal("failed to parse token")
 	}
 
-	if claims["name"] != name {
-		t.Fatalf("%v != %v", claims["name"], name)
+	if claims["role"] != role || claims["client_name"] != clientName || claims["app_name"] != appName || !tokenParsed.Valid {
+		t.Fatalf("invalid token")
 	}
 
 }
