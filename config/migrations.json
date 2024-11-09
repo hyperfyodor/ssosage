@@ -1,0 +1,5 @@
+{
+    "migrations_path": "./migrations",
+    "storage_path": "./storage/ssosage.db",
+    "migrations_table": "ssosage_migrations"
+}

@@ -1,0 +1,4 @@
+{
+    "storage_path" : "./storage/ssosage.db",
+    "grpc_port": 44044
+}
