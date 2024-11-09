@@ -7,7 +7,7 @@ require (
 	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/golang-migrate/migrate/v4 v4.18.1
 	github.com/grpc-ecosystem/go-grpc-middleware/v2 v2.1.0
-	github.com/hyperfyodor/ssosage_proto v0.0.0-20241107141653-71865d782e43
+	github.com/hyperfyodor/ssosage_proto v0.0.0-20241109184549-c262edd666ff
 	github.com/ilyakaznacheev/cleanenv v1.5.0
 	golang.org/x/crypto v0.28.0
 	google.golang.org/grpc v1.64.1
