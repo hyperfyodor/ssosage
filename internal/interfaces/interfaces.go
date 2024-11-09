@@ -5,12 +5,20 @@ import (
 	"ssosage/internal/models"
 )
 
-type UserSaver interface {
-	SaveUser(ctx context.Context, name string, passwordHash []byte) error
+type ClientSaver interface {
+	SaveClient(ctx context.Context, name string, passwordHash []byte) (int64, error)
 }
 
-type UserProvider interface {
-	User(ctx context.Context, name string) (models.User, error)
+type ClientProvider interface {
+	Client(ctx context.Context, name string) (models.Client, error)
+}
+
+type AppSaver interface {
+	SaveApp(ctx context.Context, name string, secret string, roles string) (int64, error)
+}
+
+type AppProvider interface {
+	App(ctx context.Context, name string) (models.App, error)
 }
 
 type PasswordHasher interface {
